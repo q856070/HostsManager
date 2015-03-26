@@ -111,6 +111,7 @@ namespace HostsManager {
             hsItem.ShowTabPage = tp;
             tp.Tag = hsItem;
             TextBox txt = new TextBox();
+			txt.Font = new Font("微软雅黑", 13.0f);
             txt.HideSelection = false;
             txt.Multiline = true;
             txt.Dock = DockStyle.Fill;

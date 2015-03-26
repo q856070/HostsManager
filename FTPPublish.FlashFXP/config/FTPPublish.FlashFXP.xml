@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<config>
+  <flashFXPPwd><![CDATA[zFgekD9LM29/jKSzpd7v7A==]]></flashFXPPwd>
+  <flashFXPPath><![CDATA[E:\Program Files\FlashFXP\FlashFXP.exe]]></flashFXPPath>
+  <flashFXPSiteName><![CDATA[集成系统]]></flashFXPSiteName>
+  <item>
+    <publishKey><![CDATA[DNFData_DNF]]></publishKey>
+    <ftpDir><![CDATA[/dnf.jdbbx.com/]]></ftpDir>
+  </item>
+</config>

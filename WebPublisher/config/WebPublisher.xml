@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<config>
+  <WorkspaceDir><![CDATA[D:\ZUM\ftpPublish\]]></WorkspaceDir>
+  <historys>
+    <path><![CDATA[D:\ZUM\www\DNF\]]></path>
+  </historys>
+  <item>
+    <sourceDir><![CDATA[D:\ZUM\www\DNF\]]></sourceDir>
+    <IgnoreDirs><![CDATA[cacheDepTmp
+cacheFileTmp]]></IgnoreDirs>
+    <LastReleaseTime><![CDATA[2012-2-27 0:00:00]]></LastReleaseTime>
+  </item>
+</config>

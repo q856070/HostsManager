@@ -111,7 +111,7 @@ namespace HostsManager {
             hsItem.ShowTabPage = tp;
             tp.Tag = hsItem;
             TextBox txt = new TextBox();
-			txt.Font = new Font("微软雅黑", 13.0f);
+            txt.Font = new Font("微软雅黑", 13.0f);
             txt.HideSelection = false;
             txt.Multiline = true;
             txt.Dock = DockStyle.Fill;
@@ -225,12 +225,64 @@ namespace HostsManager {
                 }
             }
         }
+
+        void LineNotesOpearation(TextBox txt) {
+            //1. 先确定的行
+            //2. 判断注释还是取消注释
+            string noteFlag = "# ";
+            //获取选中的行或者当前焦点所在的行
+            Dictionary<int, string> selectionLines = new Dictionary<int, string>();//每行的行号和文本
+            int startIndex = txt.SelectionStart;
+            int endIndex = startIndex + txt.SelectedText.Length;
+            int count = 0;
+
+            string currentLineText = string.Empty;
+            for (int i = 0; i < txt.Lines.Length; i++) {
+                count += txt.Lines[i].Length;
+                if (count >= startIndex) {
+                    selectionLines.Add(i, txt.Lines[i]);
+                    //if (endIndex == startIndex) {
+                        
+                    //} else if (count <= endIndex) {
+                    //    selectionLines.Add(i, txt.Lines[i]);
+                    //}
+                    if (count <= endIndex) {
+                        break;
+                    }
+
+                }
+            }
+            bool allNote = true;
+            foreach (var item in selectionLines) {
+                var str = item.Value.Trim();
+                if (str.Length >= 0) {
+                    if (!str.StartsWith(noteFlag)) {
+                        allNote = false;
+                        break;
+                    }
+                }
+            }
+            if (allNote) {
+                //全部已注释,移除注释
+                foreach (var item in selectionLines) {
+                    txt.Lines[item.Key] = item.Value.Remove(0, noteFlag.Length);
+                }
+
+            } else {
+                foreach (var item in selectionLines) {
+                    txt.Lines[item.Key] = noteFlag + item.Value;
+                }
+            }
+        }
+
         /// <summary>
         /// 快捷键保存
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void txt_HostStr_KeyDown(object sender, KeyEventArgs e) {
+            //MessageBox.Show(string.Format("{0},{1},{2}", e.KeyCode, e.KeyData, e.KeyValue));
+            //return;
             if (e.Control) {
                 if (e.KeyCode == Keys.S) {
 
@@ -244,6 +296,8 @@ namespace HostsManager {
                     //全选
                     (sender as TextBox).SelectAll();
                     e.Handled = true;
+                } else if (e.KeyCode == Keys.OemQuestion || e.KeyCode == Keys.Divide) {
+                    LineNotesOpearation(sender as TextBox);
 
                 } else if (e.KeyCode == Keys.F) {
                     e.Handled = true;

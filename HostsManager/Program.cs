@@ -18,7 +18,11 @@ namespace HostsManager {
                             Application.EnableVisualStyles();
                             Application.SetCompatibleTextRenderingDefault(false);
                             Application.Run(new FrmMain(commands));
-                        } catch {}
+                        } catch(Exception ex) {
+#if DEBUG
+							throw ex;
+#endif
+						}
                     } else {
                         ShowCurrForm(commands);
                     }

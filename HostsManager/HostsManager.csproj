@@ -72,6 +72,12 @@
     <Compile Include="FrmFind.Designer.cs">
       <DependentUpon>FrmFind.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrmGoLine.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmGoLine.Designer.cs">
+      <DependentUpon>FrmGoLine.cs</DependentUpon>
+    </Compile>
     <Compile Include="FrmMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -88,6 +94,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FrmFind.resx">
       <DependentUpon>FrmFind.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmGoLine.resx">
+      <DependentUpon>FrmGoLine.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmMain.resx">
       <DependentUpon>FrmMain.cs</DependentUpon>

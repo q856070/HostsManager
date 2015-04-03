@@ -257,10 +257,7 @@ namespace HostsManager {
                         endRow = startRow + txt.SelectedText.Split(new string[] { "\r\n" }, StringSplitOptions.None).Length - 1;
                         i++;
                         while (i <= endRow) {
-                            //过滤空行
-                            if (txt.Lines[i].Trim().Length > 2) {
-                                selectedRows.Add(i);
-                            }
+                            selectedRows.Add(i);
                             charCount += txt.Lines[i].Length + 2;
                             i++;
                         }
@@ -289,21 +286,27 @@ namespace HostsManager {
 
             //3. txt.Lines为只读数组,所有只能替换注释或取消注释后的字符数组
             var lines = txt.Lines.Clone() as string[];
+            int operationLinesCount = 0;
             if (allNote) {
-                //全部已注释,移除注释
+                //移除注释
                 foreach (var index in selectedRows) {
-                    lines[index] = txt.Lines[index].Remove(0, noteFlag.Length);
+                    if (txt.Lines[index].Trim().Length - 2 > 0) {
+                        lines[index] = txt.Lines[index].Remove(0, noteFlag.Length);
+                        operationLinesCount++;
+                    }
                 }
-                //移除注释符长度
-                endIndex -= selectedRows.Count * noteFlag.Length;
             } else {
-                //包含未注释的行,所有行添加注释
+                //添加注释
                 foreach (var index in selectedRows) {
-                    lines[index] = noteFlag + txt.Lines[index];
+                    if (txt.Lines[index].Trim().Length - 2 > 0) {
+                        lines[index] = noteFlag + txt.Lines[index];
+                        operationLinesCount++;
+                    }
                 }
-                //加上注释符长度
-                endIndex += selectedRows.Count * noteFlag.Length;
             }
+
+            //加上或移除注释符长度
+            endIndex += operationLinesCount * noteFlag.Length * (allNote ? -1 : 1);
             txt.Lines = lines;
 
             //4. 选中行

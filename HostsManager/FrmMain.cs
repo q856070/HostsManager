@@ -111,7 +111,6 @@ namespace HostsManager {
             hsItem.ShowTabPage = tp;
             tp.Tag = hsItem;
             TextBox txt = new TextBox();
-            txt.Font = new Font("微软雅黑", 13.0f);
             txt.HideSelection = false;
             txt.Multiline = true;
             txt.Dock = DockStyle.Fill;
@@ -124,6 +123,7 @@ namespace HostsManager {
 
             //add by qq
             txt.MouseWheel += txt_MouseWheel;
+            txt.Font = this.TextFont;
 
             return tp;
 
@@ -311,6 +311,37 @@ namespace HostsManager {
         }
 
         /// <summary>
+        /// 获取或设置文本框字体
+        /// </summary>
+        public Font TextFont {
+            get {
+                Font font = this.Font.Clone() as Font;
+                if (HostsManager.Properties.Settings.Default.Font.Length > 0) {
+                    try {
+                        var arr = HostsManager.Properties.Settings.Default.Font.Split(',');
+                        var name = arr[0];
+                        var size = float.Parse(arr[1]);
+                        FontStyle fontStyle = (FontStyle)Enum.Parse(typeof(FontStyle), arr[2]);
+                        font = new System.Drawing.Font(name, size, fontStyle);
+                    } catch (Exception) {
+                        font = this.Font;
+                    }
+                }
+                return font;
+            }
+            set {
+                var font = value;
+                foreach (TabPage page in tab_AllHost.TabPages) {
+                    foreach (Control item in page.Controls) {
+                        item.Font = font;
+                    }
+                }
+                HostsManager.Properties.Settings.Default.Font = string.Format("{0},{1},{2}", font.Name, font.Size, font.Style);
+                HostsManager.Properties.Settings.Default.Save();
+            }
+        }
+
+        /// <summary>
         /// 快捷键保存
         /// </summary>
         /// <param name="sender"></param>
@@ -318,6 +349,17 @@ namespace HostsManager {
         private void txt_HostStr_KeyDown(object sender, KeyEventArgs e) {
             //MessageBox.Show(string.Format("{0},{1},{2}", e.KeyCode, e.KeyData, e.KeyValue));
             //return;
+            if (e.KeyCode == Keys.F1) {
+                string caption = "帮助提示";
+                string text = @"Ctrl + S        : 保存当前文本" + Environment.NewLine +
+                              @"Ctrl + A        : 全选当前文本框" + Environment.NewLine +
+                              @"Ctrl + /        : 注释或取消注释选中行" + Environment.NewLine +
+                              @"Ctrl + F        : 搜索文本" + Environment.NewLine +
+                              @"Ctrl + Alt + F: 更换为文本框字体" + Environment.NewLine;
+                MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                e.Handled = true;
+                return;
+            }
             if (e.Control) {
                 if (e.KeyCode == Keys.S) {
 
@@ -333,6 +375,16 @@ namespace HostsManager {
                     e.Handled = true;
                 } else if (e.KeyCode == Keys.OemQuestion || e.KeyCode == Keys.Divide) {
                     NotesOpearation(sender as TextBox);
+                    e.Handled = true;
+                } else if (e.Alt && e.KeyCode == Keys.F) {
+                    FontDialog fontDialog = new FontDialog();
+                    fontDialog.Font = (sender as Control).Font;
+
+                    if (fontDialog.ShowDialog() == DialogResult.OK) {
+                        var font = fontDialog.Font;
+                        this.TextFont = font;
+                    }
+                    e.Handled = true;
                 } else if (e.KeyCode == Keys.F) {
                     e.Handled = true;
                     //ctrl+F响应搜索

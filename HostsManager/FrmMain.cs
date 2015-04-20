@@ -287,7 +287,7 @@ namespace HostsManager {
 			foreach (var index in selectedRows) {
 				var str = txt.Lines[index].Trim();
 				if (str.Length >= 2) {
-					if (!str.StartsWith(noteFlag)) {
+					if (!str.StartsWith(noteFlag.Trim())) {
 						allNote = false;
 						break;
 					}
@@ -378,10 +378,11 @@ namespace HostsManager {
 			}
 			if (e.Control) {
 
-				System.Diagnostics.Debug.WriteLine(txt.CanUndo);
 				if (e.KeyCode == Keys.S) {
-
-					SaveTabPageHS((TabPage)txt.Parent);
+                    (txt.Parent as TabPage).Select();
+                    tsbtn_UseCurrHS_Click(this.tsbtn_UseCurrHS, null);
+					//SaveTabPageHS((TabPage)txt.Parent);
+                    txt.Focus();
 
 					e.Handled = true;
 					if (e.Alt) {

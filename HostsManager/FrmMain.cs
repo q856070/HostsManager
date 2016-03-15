@@ -363,11 +363,16 @@ namespace HostsManager {
             var txt = (TextBox)sender;
             if (e.KeyCode == Keys.F1) {
                 string caption = "帮助提示";
-                string text = @"Ctrl + S        : 保存当前文本" + Environment.NewLine +
-                              @"Ctrl + A        : 全选当前文本框" + Environment.NewLine +
-                              @"Ctrl + /        : 注释或取消注释选中行" + Environment.NewLine +
-                              @"Ctrl + F        : 搜索文本" + Environment.NewLine +
-                              @"Ctrl + Alt + F: 更换为文本框字体" + Environment.NewLine;
+                string text =
+                              @"Ctrl + E : 启用当前选项卡" + Environment.NewLine +
+                              @"Ctrl + S : 启用并保存当前选项卡" + Environment.NewLine +
+                              @"--------------------------------------" + Environment.NewLine +
+                              @"Ctrl + A : 全选当前文本框" + Environment.NewLine +
+                              @"Ctrl + F : 文本框内搜索字符" + Environment.NewLine +
+                              @"Ctrl + / : 注释或取消注释选中行" + Environment.NewLine +
+                              @"--------------------------------------" + Environment.NewLine +
+                              @"Ctrl + Wheel : 切换字体大小" + Environment.NewLine +
+                              @"Ctrl + Alt + F : 选择其他字体" + Environment.NewLine;
                 MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                 e.Handled = true;
                 return;
@@ -377,13 +382,21 @@ namespace HostsManager {
                 if (e.KeyCode == Keys.S) {
                     (txt.Parent as TabPage).Select();
                     tsbtn_UseCurrHS_Click(this.tsbtn_UseCurrHS, null);
-                    //SaveTabPageHS((TabPage)txt.Parent);
                     txt.Focus();
-
                     e.Handled = true;
                     if (e.Alt) {
                         this.Close();
                     }
+                } else if (e.KeyCode == Keys.E) {
+                    TabPage tp = (txt.Parent as TabPage);
+                    if (tp != null) {
+                        tp.Select();
+                        tsbtn_UseCurrHS.Enabled = false;
+                        TabPage preCurrTP = currUsingHSTabP;
+                        currUsingHSTabP = tp;
+                    }
+                    txt.Focus();
+                    e.Handled = true;
                 } else if (e.KeyCode == Keys.A) {
                     //全选
                     txt.SelectAll();
@@ -437,35 +450,38 @@ namespace HostsManager {
                     };
                     win.Show(this);
                 } else if (e.KeyCode == Keys.H) {
-                    e.Handled = true;
-                    //ctrl+F响应搜索
-                    //已存在则不弹出
-                    if (this.OwnedForms.Length > 0) {
-                        foreach (var item in this.OwnedForms) {
-                            if (item is FrmReplace) {
-                                (item as FrmReplace).Focus();
-                                return;
-                            }
-                        }
-                    }
-                    FrmReplace win = new FrmReplace();
-                    win.Owner = this;
-                    win.ReplaceText = delegate(int start, string source, string target) {
-                        //选中文本
-                        txt.Select(start, source.Length);
-                        //txt.Text.Replace()
-                        //滚动条到焦点
-                        txt.ScrollToCaret();
-                    };
-                    win.TextIndexOf = delegate(string value, int startIndex, bool matchTheCase) {
-                        string content = txt.Text;
-                        if (!matchTheCase) {
-                            value = value.ToUpper();
-                            content = content.ToUpper();
-                        }
-                        return content.IndexOf(value, startIndex);
-                    };
-                    win.Show(this);
+                    //TODO:替换未完成
+
+
+                    //e.Handled = true;
+                    ////ctrl+F响应搜索
+                    ////已存在则不弹出
+                    //if (this.OwnedForms.Length > 0) {
+                    //    foreach (var item in this.OwnedForms) {
+                    //        if (item is FrmReplace) {
+                    //            (item as FrmReplace).Focus();
+                    //            return;
+                    //        }
+                    //    }
+                    //}
+                    //FrmReplace win = new FrmReplace();
+                    //win.Owner = this;
+                    //win.ReplaceText = delegate(int start, string source, string target) {
+                    //    //选中文本
+                    //    txt.Select(start, source.Length);
+                    //    //txt.Text.Replace()
+                    //    //滚动条到焦点
+                    //    txt.ScrollToCaret();
+                    //};
+                    //win.TextIndexOf = delegate(string value, int startIndex, bool matchTheCase) {
+                    //    string content = txt.Text;
+                    //    if (!matchTheCase) {
+                    //        value = value.ToUpper();
+                    //        content = content.ToUpper();
+                    //    }
+                    //    return content.IndexOf(value, startIndex);
+                    //};
+                    //win.Show(this);
                 }
             }
         }

@@ -17,6 +17,7 @@ namespace HostsManager {
 
         private List<MHostScheme> hsList = null;
         private TabPage currUsingHSTabP = null;
+        private TabPage prerUsingHSTabP = null;
 
         private TabPage lastCMenuTabP = null;
 
@@ -380,6 +381,7 @@ namespace HostsManager {
             if (e.Control) {
 
                 if (e.KeyCode == Keys.S) {
+                    //启用并保存当前选项
                     (txt.Parent as TabPage).Select();
                     tsbtn_UseCurrHS_Click(this.tsbtn_UseCurrHS, null);
                     txt.Focus();
@@ -388,6 +390,7 @@ namespace HostsManager {
                         this.Close();
                     }
                 } else if (e.KeyCode == Keys.E) {
+                    //启用当前选项
                     TabPage tp = (txt.Parent as TabPage);
                     if (tp != null) {
                         tp.Select();
@@ -397,6 +400,18 @@ namespace HostsManager {
                     }
                     txt.Focus();
                     e.Handled = true;
+                } else if (e.KeyCode == Keys.Tab) {
+                    //切换到上一个选项卡
+#if DEBUG
+                    //var tab = this.tab_AllHost.SelectedTab;
+                    //if (tab != null) {
+                    //    if (prerUsingHSTabP != null) {
+                    //        this.tab_AllHost.SelectedTab = prerUsingHSTabP;
+                    //        prerUsingHSTabP.Select();
+                    //        prerUsingHSTabP.FindForm().Activate();
+                    //    }
+                    //}
+#endif
                 } else if (e.KeyCode == Keys.A) {
                     //全选
                     txt.SelectAll();
@@ -405,6 +420,7 @@ namespace HostsManager {
                     NotesOpearation(sender as TextBox);
                     e.Handled = true;
                 } else if (e.Alt && e.KeyCode == Keys.F) {
+                    //切换字体
                     FontDialog fontDialog = new FontDialog();
                     fontDialog.Font = (sender as Control).Font;
 
@@ -414,12 +430,16 @@ namespace HostsManager {
                     }
                     e.Handled = true;
                 } else if (e.KeyCode == Keys.G) {
+                    //TODO:跳转到指定一行
+                    //跳转到指定一行
+#if DEBUG
                     if (txt.Text.Length > 0 && txt.Lines.Length > 0) {
                         FrmGoLine win = new FrmGoLine(txt);
                         win.Owner = this;
 
                         win.ShowDialog();
                     }
+#endif
                 } else if (e.KeyCode == Keys.F) {
                     e.Handled = true;
                     //ctrl+F响应搜索
@@ -439,6 +459,7 @@ namespace HostsManager {
                         txt.Select(start, length);
                         //滚动条到焦点
                         txt.ScrollToCaret();
+                        this.Activate();
                     };
                     win.TextIndexOf = delegate(string value, int startIndex, bool matchTheCase) {
                         string content = txt.Text;
